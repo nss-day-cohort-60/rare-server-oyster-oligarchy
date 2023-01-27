@@ -1,0 +1,2 @@
+INSERT INTO 'Users' VALUES (NULL,"Jason","Howes","jasonmatthewhowes@gmail.com","Is awesome very cool dude","jhowes","oyster","https://www.google.com/imgres?imgurl=https%3A%2F%2Fd1hbpr09pwz0sk.cloudfront.net%2Fprofile_pic%2Fjason-howes-91015d34.jpg&imgrefurl=https%3A%2F%2Frocketreach.co%2Fjason-howes-email_4752027&tbnid=cZ5ROgfimUu_DM&vet=12ahUKEwiV0JrTlej8AhU2G94AHZVaDj8QMygHegUIARC5AQ..i&docid=oAwVgvIKKSlvrM&w=200&h=200&itg=1&q=jason%20howes&ved=2ahUKEwiV0JrTlej8AhU2G94AHZVaDj8QMygHegUIARC5AQ","01/27/2023",1)		
+		
