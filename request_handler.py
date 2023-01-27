@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import json
-
+import json 
 from views.user_requests import create_user, login_user
+from views.post_requests import get_all_posts
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -51,7 +51,15 @@ class HandleRequests(BaseHTTPRequestHandler):
 
     def do_GET(self):
         """Handle Get requests to the server"""
-        pass
+        response = {}
+
+        # if response == {}:
+        (resource, id) = self.parse_url(self.path)
+
+        if resource == 'posts':
+            response = get_all_posts()
+
+        self.wfile.write(json.dumps(response).encode())
 
 
     def do_POST(self):

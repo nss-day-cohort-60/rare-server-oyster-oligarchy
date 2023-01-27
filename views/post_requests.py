@@ -66,7 +66,7 @@ def get_all_posts():
     return posts
 
 def get_single_post(id):
-    with sqlite3.connect("./snakes.sqlite3") as conn:
+    with sqlite3.connect("./loaddata.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
@@ -75,21 +75,31 @@ def get_single_post(id):
         db_cursor.execute("""
         SELECT 
             a.id,
-            a.first_name,
-            a.last_name,
-            a.email
-        FROM Posts a
+            a.user_id,
+            a.category_id,
+            a.title,
+            a.publication_date,
+            a.image_url,
+            a.content,
+            a.approved,
+            b.id user_id,
+            b.first_name user_first_name,
+            b.last_name user_last_name,
+            b.email user_email,
+            c.id category_id,
+            c.label
+            FROM Posts a
+            JOIN Users b 
+            ON b.id = a.user_id
+            JOIN Categories c 
+            ON c.id = a.category_id
         WHERE a.id = ?
         """, ( id, ))
 
         # Load the single result into memory
         data = db_cursor.fetchone()
 
-        if data is None:
-            return "Invalid request"
-
-        else:
-            # Create an post instance from the current row
-            post = Post(data['id'], data['user_id'], data['category_id'], data['title'], data ['publication_date'], data['image_url'], data['content'], data['approved'])
+        # Create an post instance from the current row
+        post = Post(data['id'], data['user_id'], data['category_id'], data['title'], data ['publication_date'], data['image_url'], data['content'], data['approved'])
 
         return post.__dict__
