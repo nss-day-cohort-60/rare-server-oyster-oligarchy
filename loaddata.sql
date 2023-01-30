@@ -167,3 +167,23 @@ JOIN Categories c
                 on u.id = a.user_id
             WHERE a.user_id = 2
             ORDER BY u.id
+
+            
+SELECT 
+  a.id,
+  a.user_id,
+  a.category_id,
+  a.title,
+  a.publication_date,
+  a.image_url,
+  a.content,
+  a.approved,
+  b.first_name user_first_name,
+  b.last_name user_last_name,
+  c.label category_label
+  FROM Posts a
+  JOIN Users b 
+  ON b.id = a.user_id
+  JOIN Categories c 
+  ON c.id = a.category_id
+  ORDER BY a.publication_date DESC

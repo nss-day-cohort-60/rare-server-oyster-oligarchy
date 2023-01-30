@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json 
 from views.user_requests import create_user, login_user
-from views.post_requests import get_single_post, get_posts_by_user
+from views.post_requests import get_all_posts, get_single_post, get_posts_by_user
 from urllib.parse import urlparse
 
 
@@ -100,13 +100,12 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if '?' not in self.path:
             (resource, id, query_params) = parsed
-
             if resource == 'posts':
                 self._set_headers(200)
                 if id is not None:
                     response = get_single_post(id)
                 else:
-                    response = get_all_posts(query_params)
+                    response = get_all_posts()
         else: # There is a ? in the path, run the query param functions
                 (resource, query, query_params) = parsed
 
