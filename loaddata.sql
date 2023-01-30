@@ -142,8 +142,48 @@ JOIN Categories c
   ON c.id = a.category_id
 
 
-SELECT
+
+        SELECT 
+            a.id,
+            a.user_id,
+            a.category_id,
+            a.title,
+            a.publication_date,
+            a.image_url,
+            a.content,
+            a.approved,
+            u.id,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,
+            u.username,
+            u.password,
+            u.profile_image_url,
+            u.created_on,
+            u.active
+            FROM Posts a
+            JOIN `Users` u
+                on u.id = a.user_id
+            WHERE a.user_id = 2
+            ORDER BY u.id
+
+            
+SELECT 
   a.id,
-  a.label
-FROM Categories
-ORDER BY
+  a.user_id,
+  a.category_id,
+  a.title,
+  a.publication_date,
+  a.image_url,
+  a.content,
+  a.approved,
+  b.first_name user_first_name,
+  b.last_name user_last_name,
+  c.label category_label
+  FROM Posts a
+  JOIN Users b 
+  ON b.id = a.user_id
+  JOIN Categories c 
+  ON c.id = a.category_id
+  ORDER BY a.publication_date DESC
