@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json 
 from views.user_requests import create_user, login_user
 from views.post_requests import get_all_posts
+from views.categories_requests import get_all_catagories, create_category
 from urllib.parse import urlparse
 
 
@@ -97,13 +98,17 @@ class HandleRequests(BaseHTTPRequestHandler):
         """Handle Get requests to the server"""
         response = {}
 
-        (resource, id, query_param) = self.parse_url(self.path)
+        (resource, id, query_params) = self.parse_url(self.path)
 
         # WHY IS THIS NOT WORKING???
 
         if resource == 'posts':
             self._set_headers(200)
             response = get_all_posts()
+
+        elif resource == 'categories':
+            self._set_headers(200)
+            response = get_all_catagories()
 
         self.wfile.write(json.dumps(response).encode())
 
@@ -114,12 +119,14 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
-        resource, _ = self.parse_url()
+        (resource, id, query_params) = self.parse_url(self.path)
 
         if resource == 'login':
             response = login_user(post_body)
         if resource == 'register':
             response = create_user(post_body)
+        if resource == 'categories':
+            response = create_category(post_body)
 
         self.wfile.write(response.encode())
 

@@ -142,4 +142,8 @@ JOIN Categories c
   ON c.id = a.category_id
 
 
-
+SELECT
+  a.id,
+  a.label
+FROM Categories
+ORDER BY
