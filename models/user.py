@@ -1,7 +1,6 @@
 class User():
     """Class that defines the properties for a post object"""
 
-
     def __init__(self, id, first_name, last_name, bio, username, profile_image_url, created_on, active,  email = "", password = ""):
         self.id = id
         self.first_name = first_name

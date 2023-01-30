@@ -1,30 +1,74 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import json
-
+import json 
 from views.user_requests import create_user, login_user
+from views.post_requests import get_all_posts
+from urllib.parse import urlparse
 
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Handles the requests to this server"""
 
-    def parse_url(self):
-        """Parse the url into the resource and id"""
-        path_params = self.path.split('/')
-        resource = path_params[1]
-        if '?' in resource:
-            param = resource.split('?')[1]
-            resource = resource.split('?')[0]
-            pair = param.split('=')
-            key = pair[0]
-            value = pair[1]
-            return (resource, key, value)
-        else:
-            id = None
-            try:
-                id = int(path_params[2])
-            except (IndexError, ValueError):
-                pass
-            return (resource, id)
+    # def parse_url(self):
+    #     """Parse the url into the resource and id"""
+    #     path_params = self.path.split('/')
+    #     resource = path_params[1]
+    #     if '?' in resource:
+    #         param = resource.split('?')[1]
+    #         resource = resource.split('?')[0]
+    #         pair = param.split('=')
+    #         key = pair[0]
+    #         value = pair[1]
+    #         return (resource, key, value)
+    #     else:
+    #         id = None
+    #         try:
+    #             id = int(path_params[2])
+    #         except (IndexError, ValueError):
+    #             pass
+    #     return (resource, id)
+
+    # def parse_url(self, path):
+    #     """Handles the requests to this server"""
+    #     url_components = urlparse(path)
+    #     path_params = url_components.path.strip("/").split("/")
+    #     query_params = []
+
+    #     if url_components.query != '':
+    #         query_params = url_components.query.split("&")
+
+    #     resource = path_params[0]
+    #     id = None
+
+    #     try:
+    #         id = int(path_params[1])
+    #     except IndexError:
+    #         pass  # No route parameter exists: /animals
+    #     except ValueError:
+    #         pass  # Request had trailing slash: /animals/
+
+    #     return (resource, id, query_params)
+
+    def parse_url(self, path):
+        url_components = urlparse(path)
+        path_params = url_components.path.strip("/").split("/")
+        query_params = []
+
+        if url_components.query != '':
+            query_params = url_components.query.split("&")
+
+        resource = path_params[0]
+        id = None
+
+        try:
+            id = int(path_params[1])
+        except IndexError:
+            pass  # No route parameter exists: /animals
+        except ValueError:
+            pass  # Request had trailing slash: /animals/
+
+        return (resource, id, query_params)
+
+
 
     def _set_headers(self, status):
         """Sets the status code, Content-Type and Access-Control-Allow-Origin
@@ -51,7 +95,17 @@ class HandleRequests(BaseHTTPRequestHandler):
 
     def do_GET(self):
         """Handle Get requests to the server"""
-        pass
+        response = {}
+
+        (resource, id, query_param) = self.parse_url(self.path)
+
+        # WHY IS THIS NOT WORKING???
+
+        if resource == 'posts':
+            self._set_headers(200)
+            response = get_all_posts()
+
+        self.wfile.write(json.dumps(response).encode())
 
 
     def do_POST(self):

@@ -120,7 +120,26 @@ INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.c
 -- );
 
 
-
+SELECT 
+  a.id,
+  a.user_id,
+  a.category_id,
+  a.title,
+  a.publication_date,
+  a.image_url,
+  a.content,
+  a.approved,
+  b.id user_id,
+  b.first_name user_first_name,
+  b.last_name user_last_name,
+  b.email user_email,
+  c.id category_id,
+  c.label
+FROM Posts a
+JOIN Users b 
+  ON b.id = a.user_id
+JOIN Categories c 
+  ON c.id = a.category_id
 
 
 
