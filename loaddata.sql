@@ -187,3 +187,20 @@ SELECT
   JOIN Categories c 
   ON c.id = a.category_id
   ORDER BY a.publication_date DESC
+
+
+UPDATE Posts
+SET publication_date = "2022-01-02"
+WHERE id = 1
+
+UPDATE Posts
+SET publication_date = "2023-01-27"
+WHERE id = 2
+
+UPDATE Posts
+SET publication_date = "1874-10-31"
+WHERE id = 3
+
+UPDATE Posts
+SET publication_date = "1969-01-01"
+WHERE id = 4
