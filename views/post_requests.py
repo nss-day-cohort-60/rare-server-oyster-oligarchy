@@ -1,6 +1,6 @@
 import sqlite3
 
-from models import Post, User, Categories
+from models import Post, User, Categories, PostDetails
 
 #  This module will import sqlite3 and Post class from models
 # This module will show the initial structure of an POSTS dictionary
@@ -62,33 +62,33 @@ def get_single_post(id):
         # into the SQL statement.
         db_cursor.execute("""
         SELECT 
-            a.id,
-            a.user_id,
-            a.category_id,
-            a.title,
-            a.publication_date,
-            a.image_url,
-            a.content,
-            a.approved,
-            b.id user_id,
-            b.first_name user_first_name,
-            b.last_name user_last_name,
-            b.email user_email,
+            p.id,
+            p.user_id,
+            p.category_id,
+            p.title,
+            p.publication_date,
+            p.image_url,
+            p.content,
+            p.approved,
+            u.id user_id,
+            u.first_name,
+            u.last_name,
+            u.email user_email,
             c.id category_id,
             c.label
-            FROM Posts a
-            JOIN Users b 
-            ON b.id = a.user_id
+            FROM Posts p
+            JOIN Users u 
+            ON u.id = p.user_id
             JOIN Categories c 
-            ON c.id = a.category_id
-        WHERE a.id = ?
+            ON c.id = p.category_id
+        WHERE p.id = ?
         """, ( id, ))
 
         # Load the single result into memory
         data = db_cursor.fetchone()
 
         # Create an post instance from the current row
-        post = Post(data['id'], data['user_id'], data['category_id'], data['title'], data ['publication_date'], data['image_url'], data['content'], data['approved'])
+        post = PostDetails(data['title'], data['first_name'], data['last_name'], data['label'], data ['publication_date'],  data['content'], )
 
     return post.__dict__
 
