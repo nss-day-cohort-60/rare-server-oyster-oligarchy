@@ -97,7 +97,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         """Handle Get requests to the server"""
         response = {}
 
-        (resource, id, query_param) = self.parse_url(self.path)
+        (resource, query, query_param) = self.parse_url(self.path)
 
         # WHY IS THIS NOT WORKING???
 
@@ -114,7 +114,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
-        resource, _ = self.parse_url()
+        (resource, id, query_params) = self.parse_url(self.path)
 
         if resource == 'login':
             response = login_user(post_body)
