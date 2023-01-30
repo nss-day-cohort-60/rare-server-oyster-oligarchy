@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json 
 from views.user_requests import create_user, login_user
-from views.post_requests import get_all_posts
+from views.post_requests import get_single_post, get_posts_by_user
 from urllib.parse import urlparse
 
 
@@ -96,14 +96,24 @@ class HandleRequests(BaseHTTPRequestHandler):
     def do_GET(self):
         """Handle Get requests to the server"""
         response = {}
+        parsed = self.parse_url(self.path)
 
-        (resource, id, query_param) = self.parse_url(self.path)
+        if '?' not in self.path:
+            (resource, id, query_params) = parsed
 
-        # WHY IS THIS NOT WORKING???
+            if resource == 'posts':
+                self._set_headers(200)
+                if id is not None:
+                    response = get_single_post(id)
+                else:
+                    response = get_all_posts(query_params)
+        else: # There is a ? in the path, run the query param functions
+                (resource, query, query_params) = parsed
 
-        if resource == 'posts':
-            self._set_headers(200)
-            response = get_all_posts()
+                if resource == 'posts':
+                    self._set_headers(200)
+                    # success = True
+                    response = get_posts_by_user(query_params)
 
         self.wfile.write(json.dumps(response).encode())
 
@@ -114,7 +124,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
-        resource, _ = self.parse_url()
+        (resource, id, query_params) = self.parse_url(self.path)
 
         if resource == 'login':
             response = login_user(post_body)
