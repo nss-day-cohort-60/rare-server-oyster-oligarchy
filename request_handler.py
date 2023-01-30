@@ -1,6 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json 
 from views.user_requests import create_user, login_user
+from views.categories_requests import get_all_catagories, create_category
 from views.post_requests import get_all_posts, get_single_post, get_posts_by_user
 from urllib.parse import urlparse
 
@@ -114,6 +115,10 @@ class HandleRequests(BaseHTTPRequestHandler):
                     # success = True
                     response = get_posts_by_user(query_params)
 
+        if resource == 'categories':
+            self._set_headers(200)
+            response = get_all_catagories()
+
         self.wfile.write(json.dumps(response).encode())
 
 
@@ -129,6 +134,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = login_user(post_body)
         if resource == 'register':
             response = create_user(post_body)
+        if resource == 'categories':
+            response = create_category(post_body)
 
         self.wfile.write(response.encode())
 
