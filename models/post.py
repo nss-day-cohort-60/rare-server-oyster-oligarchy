@@ -13,4 +13,13 @@ class Post():
         self.approved = approved
         self.user = None
         self.category = None
-        
+
+
+class PostDetails():
+    def __init__(self, title, first_name, last_name, label, publication_date, content):
+        self.title = title
+        self.first_name = first_name
+        self.last_name = last_name
+        self.label = label
+        self.publication_date = publication_date
+        self.content = content
