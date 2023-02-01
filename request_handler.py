@@ -2,52 +2,12 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json 
 from views.user_requests import create_user, login_user
 from views.categories_requests import get_all_catagories, create_category
-from views.post_requests import get_all_posts, get_single_post, get_posts_by_user
+from views.post_requests import get_all_posts, get_single_post, get_posts_by_user, delete_post, create_post, update_post
 from urllib.parse import urlparse
 
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Handles the requests to this server"""
-
-    # def parse_url(self):
-    #     """Parse the url into the resource and id"""
-    #     path_params = self.path.split('/')
-    #     resource = path_params[1]
-    #     if '?' in resource:
-    #         param = resource.split('?')[1]
-    #         resource = resource.split('?')[0]
-    #         pair = param.split('=')
-    #         key = pair[0]
-    #         value = pair[1]
-    #         return (resource, key, value)
-    #     else:
-    #         id = None
-    #         try:
-    #             id = int(path_params[2])
-    #         except (IndexError, ValueError):
-    #             pass
-    #     return (resource, id)
-
-    # def parse_url(self, path):
-    #     """Handles the requests to this server"""
-    #     url_components = urlparse(path)
-    #     path_params = url_components.path.strip("/").split("/")
-    #     query_params = []
-
-    #     if url_components.query != '':
-    #         query_params = url_components.query.split("&")
-
-    #     resource = path_params[0]
-    #     id = None
-
-    #     try:
-    #         id = int(path_params[1])
-    #     except IndexError:
-    #         pass  # No route parameter exists: /animals
-    #     except ValueError:
-    #         pass  # Request had trailing slash: /animals/
-
-    #     return (resource, id, query_params)
 
     def parse_url(self, path):
         url_components = urlparse(path)
@@ -69,8 +29,6 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         return (resource, id, query_params)
 
-
-
     def _set_headers(self, status):
         """Sets the status code, Content-Type and Access-Control-Allow-Origin
         headers on the response
@@ -88,10 +46,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         """
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods',
-                         'GET, POST, PUT, DELETE')
-        self.send_header('Access-Control-Allow-Headers',
-                         'X-Requested-With, Content-Type, Accept')
+        self.send_header('Access-Control-Allow-Methods','GET, POST, PUT, DELETE')
+        self.send_header('Access-Control-Allow-Headers','X-Requested-With, Content-Type, Accept')
         self.end_headers()
 
     def do_GET(self):
@@ -107,20 +63,24 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_post(id)
                 else:
                     response = get_all_posts()
-        else: # There is a ? in the path, run the query param functions
-                (resource, query, query_params) = parsed
 
-                if resource == 'posts':
-                    self._set_headers(200)
+            # NEED TO HAVE A CONDITIONAL TO DISPLAY USER POSTS ON MY-POSTS PATH
+            # if resource == 'my-posts':
+            #     response = get_posts_by_user(query_params)
+
+        else: # There is a ? in the path, run the query param functions
+            (resource, query, query_params) = parsed
+
+            if resource == 'posts':
+                self._set_headers(200)
                     # success = True
-                    response = get_posts_by_user(query_params)
+            response = get_posts_by_user(query_params)
 
         if resource == 'categories':
             self._set_headers(200)
             response = get_all_catagories()
 
         self.wfile.write(json.dumps(response).encode())
-
 
     def do_POST(self):
         """Make a post request to the server"""
@@ -136,16 +96,39 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = create_user(post_body)
         if resource == 'categories':
             response = create_category(post_body)
+        if resource == 'posts':
+            response = create_post(post_body)
 
-        self.wfile.write(response.encode())
+        self.wfile.write(json.dumps(response).encode())
 
     def do_PUT(self):
         """Handles PUT requests to the server"""
-        pass
+        self._set_headers(204)
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Delete a single order from the list
+        if resource == "posts":
+            # PLACEHOLDER BELOW FOR FUNCTION CREATION
+            update_post(id, post_body)
+
+            self.wfile.write("".encode())
+
 
     def do_DELETE(self):
         """Handle DELETE Requests"""
-        pass
+        self._set_headers(204)
+        (resource, id, query_params) = self.parse_url(self.path)
+
+        # Delete a single order from the list
+        if resource == "posts":
+            delete_post(id)
+
+
 
 
 def main():

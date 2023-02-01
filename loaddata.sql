@@ -204,3 +204,18 @@ WHERE id = 3
 UPDATE Posts
 SET publication_date = "1969-01-01"
 WHERE id = 4
+
+UPDATE Posts
+SET image_url = "https://www.redrivervalleypotatoes.com/wp-content/uploads/2016/11/OLD-2003-P-10-0048c_Picking_potatoes_near_Park_River_ND.jpg"
+WHERE id = 3
+
+UPDATE Posts
+  SET
+    user_id = 3,
+    category_id = 2,
+    title = "Testing Edit",
+    publication_date = "1675284696969",
+    image_url = "google.com",
+    content = "please work",
+    approved = 1
+  WHERE id = 13
