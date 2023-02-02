@@ -36,8 +36,7 @@ def login_user(user):
                 'valid': False
             }
 
-        return json.dumps(response)
-
+        return response
 
 def create_user(user):
     """Adds a user to the database when they register
