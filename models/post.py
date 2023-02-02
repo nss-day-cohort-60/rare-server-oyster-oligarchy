@@ -23,3 +23,4 @@ class PostDetails():
         self.label = label
         self.publication_date = publication_date
         self.content = content
+        

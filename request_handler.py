@@ -116,7 +116,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             # PLACEHOLDER BELOW FOR FUNCTION CREATION
             update_post(id, post_body)
 
-            self.wfile.write("".encode())
+            self.wfile.write(json.dumps(resource).encode())
 
 
     def do_DELETE(self):
@@ -127,8 +127,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Delete a single order from the list
         if resource == "posts":
             delete_post(id)
-
-
 
 
 def main():
