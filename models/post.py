@@ -16,7 +16,8 @@ class Post():
 
 
 class PostDetails():
-    def __init__(self, title, first_name, last_name, label, publication_date, content):
+    def __init__(self, user_id, title, first_name, last_name, label, publication_date, content):
+        self.user_id = user_id
         self.title = title
         self.first_name = first_name
         self.last_name = last_name

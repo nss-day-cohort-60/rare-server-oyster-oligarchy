@@ -38,7 +38,7 @@ def get_all_posts():
         # for row in dataset:
         for row in dataset:
             # Create a post instance from the current row
-            post = Post(row['id'], row['user_id'], row['category_id'], row['title'], row ['publication_date'], row['image_url'], row['content'], row['approved'])
+            post = Post(row['id'], row['user_id'], row['category_id'], row['title'], row ['publication_date'], row['image_url'], row['content'], True)
             # Create a user instance from the current row
             user = User(row['id'], row['user_first_name'], row['user_last_name'], None, None, None, None, None, None, None)
             # Create an category instance from the current row
@@ -88,7 +88,7 @@ def get_single_post(id):
         data = db_cursor.fetchone()
 
         # Create an post instance from the current row
-        post = PostDetails(data['title'], data['first_name'], data['last_name'], data['label'], data ['publication_date'],  data['content'], )
+        post = PostDetails(data['user_id'], data['title'], data['first_name'], data['last_name'], data['label'], data ['publication_date'],  data['content'], )
 
     return post.__dict__
 
@@ -170,7 +170,7 @@ def get_posts_by_user(query_params):
         for row in dataset:
 
             # Create a post instance from the current row
-            post = Post(row['id'], row['user_id'], row['category_id'], row['title'], row ['publication_date'], row['image_url'], row['content'], row['approved'])
+            post = Post(row['id'], row['user_id'], row['category_id'], row['title'], row ['publication_date'], row['image_url'], row['content'], True)
 
             user = User(row['id'], row['first_name'], row['last_name'], row['bio'], row['username'], row['profile_image_url'], row['created_on'], row['active'], row['email'], row['password'])
 
@@ -205,7 +205,7 @@ def create_post(new_response):
             ( user_id, category_id, title, publication_date, image_url, content, approved )
         VALUES
             ( ?, ?, ?, ?, ?, ?, ?);
-        """, (new_response['user_id'], new_response['category_id'], new_response['title'], new_response ['publication_date'], new_response['image_url'], new_response['content'], new_response['approved'], ))
+        """, (new_response['user_id'], new_response['category_id'], new_response['title'], new_response ['publication_date'], new_response['image_url'], new_response['content'], True, ))
 
         # The `lastrowid` property on the cursor will return
         # the primary key of the last thing that got added to
@@ -234,7 +234,7 @@ def update_post(id, new_post):
                 content = ?,
                 approved = ?
             WHERE id = ?
-        """, (new_post['user_id'], new_post['category_id'], new_post['title'], new_post ['publication_date'], new_post['image_url'], new_post['content'], new_post['approved'], id, ))
+        """, (new_post['user_id'], new_post['category_id'], new_post['title'], new_post ['publication_date'], new_post['image_url'], new_post['content'], True, id, ))
 
         # Were any rows affected?
         # Did the client send an `id` that exists?
