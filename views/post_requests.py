@@ -144,10 +144,14 @@ def get_posts_by_user(query_params):
             u.password,
             u.profile_image_url,
             u.created_on,
-            u.active
+            u.active,
+            c.id,
+            c.label
             FROM Posts p
             JOIN `Users` u
                 on u.id = p.user_id
+            JOIN `Categories` c
+                on c.id = p.category_id
             {where_clause}
             {sort_by}
         """
@@ -168,7 +172,77 @@ def get_posts_by_user(query_params):
             # Create a post instance from the current row
             post = Post(row['id'], row['user_id'], row['category_id'], row['title'], row ['publication_date'], row['image_url'], row['content'], row['approved'])
 
+            user = User(row['id'], row['first_name'], row['last_name'], row['bio'], row['username'], row['profile_image_url'], row['created_on'], row['active'], row['email'], row['password'])
 
+            # Create an category instance from the current row
+            category = Categories(row['id'], row['label'])
+            # # Add the dictionary representation of the posts to the list
+
+            post.user = user.__dict__
+            post.category = category.__dict__
             posts.append(post.__dict__)
 
     return posts
+
+
+def delete_post(id):
+    """Function that deletes a dictionary based on id property"""
+    with sqlite3.connect("./loaddata.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM Posts
+        WHERE id = ?
+        """, (id, ))
+
+def create_post(new_response):
+    """Args: post (json string), returns new dictionary with id property added"""
+    with sqlite3.connect('./loaddata.sqlite3') as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO Posts
+            ( user_id, category_id, title, publication_date, image_url, content, approved )
+        VALUES
+            ( ?, ?, ?, ?, ?, ?, ?);
+        """, (new_response['user_id'], new_response['category_id'], new_response['title'], new_response ['publication_date'], new_response['image_url'], new_response['content'], new_response['approved'], ))
+
+        # The `lastrowid` property on the cursor will return
+        # the primary key of the last thing that got added to
+        # the database.
+        id = db_cursor.lastrowid
+        
+        # Adds the `id` property to the posts dictionary
+        # so that the client sees the
+        # primary key in the post.
+        new_response['id'] = id
+
+    return new_response
+
+def update_post(id, new_post):
+    with sqlite3.connect("./loaddata.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE Posts
+            SET
+                user_id = ?,
+                category_id = ?,
+                title = ?,
+                publication_date = ?,
+                image_url = ?,
+                content = ?,
+                approved = ?
+            WHERE id = ?
+        """, (new_post['user_id'], new_post['category_id'], new_post['title'], new_post ['publication_date'], new_post['image_url'], new_post['content'], new_post['approved'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
