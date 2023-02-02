@@ -88,7 +88,7 @@ def get_single_post(id):
         data = db_cursor.fetchone()
 
         # Create an post instance from the current row
-        post = PostDetails(data['user_id'], data['title'], data['first_name'], data['last_name'], data['label'], data ['publication_date'],  data['content'], )
+        post = PostDetails(data['user_id'], data['title'], data['first_name'], data['last_name'], data['label'], data ['publication_date'], data['image_url'], data['content'], )
 
     return post.__dict__
 

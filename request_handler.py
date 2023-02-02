@@ -116,7 +116,6 @@ class HandleRequests(BaseHTTPRequestHandler):
             # PLACEHOLDER BELOW FOR FUNCTION CREATION
             resource = update_post(id, post_body)
 
-            # self.wfile.write(json.dumps(resource).encode())
             self.wfile.write("".encode())
 
 
