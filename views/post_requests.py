@@ -108,7 +108,7 @@ def get_posts_by_user(query_params):
             if qs_key == "user_id":
                 if qs_value != '0':
                     where_clause = f"WHERE p.user_id = {qs_value}"
-                    sort_by = " ORDER BY u.id"
+                    sort_by = " ORDER BY p.publication_date DESC"
                 # elif qs_value == '2':
                 #     where_clause = f"WHERE a.user_id = {qs_value}"
                 #     sort_by = " ORDER BY u.id"

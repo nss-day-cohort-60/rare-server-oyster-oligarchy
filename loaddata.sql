@@ -219,3 +219,8 @@ UPDATE Posts
     content = "please work",
     approved = 1
   WHERE id = 13
+
+
+UPDATE Posts
+SET user_id = "2"
+WHERE id = 5
