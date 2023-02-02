@@ -1,0 +1,22 @@
+[
+  {
+    "_id": "67a24ba7-9d3f-470a-a8c5-2ebbd0f908ff",
+    "colId": "history",
+    "containerId": "",
+    "name": "http://localhost:8088/posts?user_id=1",
+    "url": "http://localhost:8088/posts?user_id=1",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2023-02-02T19:45:11.705Z",
+    "modified": "2023-02-02T19:45:11.705Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "user_id",
+        "value": "1",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  }
+]
